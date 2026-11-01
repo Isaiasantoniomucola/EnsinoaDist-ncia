@@ -1,0 +1,71 @@
+-- EaD — Ensino a Distância · esquema MySQL 8 / MariaDB 10.4+ (utf8mb4)
+-- O comando `npm run db:init` (pasta backend) cria a base de dados e estas tabelas.
+-- Manualmente:  CREATE DATABASE ead CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS utilizadores (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(90) NOT NULL,
+  email VARCHAR(160) NOT NULL UNIQUE,
+  senha_hash VARCHAR(100) NOT NULL,
+  perfil ENUM('administrador','professor') NOT NULL DEFAULT 'professor',
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS alunos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(90) NOT NULL,
+  apelido VARCHAR(90) NOT NULL,
+  email VARCHAR(160) NOT NULL UNIQUE,
+  telefone VARCHAR(30) NULL,
+  senha_hash VARCHAR(100) NOT NULL,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS aulas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  capitulo VARCHAR(90) NOT NULL,
+  titulo VARCHAR(120) NOT NULL,
+  descricao TEXT NULL,
+  categoria ENUM('documento','video') NOT NULL,
+  ficheiro VARCHAR(255) NULL,
+  nome_original VARCHAR(255) NULL,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS exercicios (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  aula_id INT UNSIGNED NOT NULL,
+  pergunta TEXT NOT NULL,
+  opcao_a VARCHAR(255) NOT NULL,
+  opcao_b VARCHAR(255) NOT NULL,
+  opcao_c VARCHAR(255) NOT NULL,
+  opcao_d VARCHAR(255) NOT NULL,
+  resposta ENUM('A','B','C','D') NOT NULL,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_ex_aula FOREIGN KEY (aula_id) REFERENCES aulas(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS respostas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  aluno_id INT UNSIGNED NOT NULL,
+  exercicio_id INT UNSIGNED NOT NULL,
+  aula_id INT UNSIGNED NOT NULL,
+  escolha ENUM('A','B','C','D') NULL,
+  correta TINYINT(1) NOT NULL DEFAULT 0,
+  UNIQUE KEY uq_aluno_exercicio (aluno_id, exercicio_id),
+  CONSTRAINT fk_resp_aluno FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE CASCADE,
+  CONSTRAINT fk_resp_ex FOREIGN KEY (exercicio_id) REFERENCES exercicios(id) ON DELETE CASCADE,
+  CONSTRAINT fk_resp_aula FOREIGN KEY (aula_id) REFERENCES aulas(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS resultados (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  aluno_id INT UNSIGNED NOT NULL,
+  aula_id INT UNSIGNED NOT NULL,
+  pontuacao SMALLINT UNSIGNED NOT NULL,
+  total SMALLINT UNSIGNED NOT NULL,
+  submetido_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_aluno_aula (aluno_id, aula_id),
+  CONSTRAINT fk_res_aluno FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE CASCADE,
+  CONSTRAINT fk_res_aula FOREIGN KEY (aula_id) REFERENCES aulas(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

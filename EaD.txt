@@ -1,0 +1,52 @@
+cd backend
+npm install
+copy .env.example .env
+npm run db:init
+npm run seed
+npm run dev
+
+cd web
+npm install
+copy .env.local.example .env.local
+npm run dev
+
+cd web
+npm install
+copy .env.local.example .env.local
+npm run dev
+
+cd mobile
+npm install
+npx expo install --fix
+copy .env.example .env
+npx expo start
+
+
+Administrador	admin@ead.com	Admin123$234	http://localhost:3000/admin/entrar
+
+Aluno	aluno@ead.com	        Aluno123@654	        http://localhost:3000/entrar
+
+cd ead\backend
+npm install
+npm run segredo
+npm run db:init
+npm run seed
+npm run dev
+
+
+
+cd ead\web
+npm install
+rmdir /s /q .next
+npm run dev
+
+cd ead\mobile
+npm install
+npx expo install --fix
+npx expo start
+
+EaD quer dizer Ensino a Distância: um ensino feito online, em que o aluno estuda pela internet, sem ter de ir a uma sala de aula.
+
+Alunos: criam conta com o e-mail, veem aulas em vídeo e em PDF, fazem exercícios com correção automática e acompanham as suas notas.
+Administrador: publica as aulas e os exercícios, gere os alunos e consulta os resultados.
+Tecnologia: o site é feito em Next.js (web), a API em Node.js com MySQL (backend) 

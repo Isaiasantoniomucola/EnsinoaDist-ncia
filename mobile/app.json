@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "EaD",
+    "slug": "ead-mobile",
+    "version": "1.0.0",
+    "orientation": "default",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ao.ead.app"
+    },
+    "android": {
+      "package": "ao.ead.app"
+    }
+  }
+}
